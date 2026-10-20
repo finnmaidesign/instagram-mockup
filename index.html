@@ -133,6 +133,23 @@
   .side .add button { color: var(--blue); font-weight: 600; }
 
   /* ---------- Toast ---------- */
+  /* ---------- Arrange (drag to reorder) ---------- */
+  .arrange { position: fixed; right: 16px; bottom: 24px; z-index: 40; display: flex; justify-content: flex-end; }
+  .arrange-start { display: flex; align-items: center; gap: 6px; background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 999px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,.25); }
+  .arrange-start svg { width: 16px; height: 16px; }
+  .arrange-tools { display: none; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--border); padding: 6px 6px 6px 14px; border-radius: 999px; box-shadow: 0 4px 16px rgba(0,0,0,.2); font-size: 13px; }
+  .arrange-tools span { color: var(--muted); margin-right: 4px; white-space: nowrap; }
+  .arrange-tools button { padding: 7px 12px; border-radius: 999px; background: var(--btn); font-weight: 600; white-space: nowrap; }
+  .arrange-tools .done { background: var(--blue); color: #fff; }
+  body.arranging .arrange-start { display: none; }
+  body.arranging .arrange-tools { display: flex; }
+  body.arranging { -webkit-user-select: none; user-select: none; }
+  body.arranging .tile { cursor: grab; -webkit-touch-callout: none; }
+  body.arranging .tile img { transform: scale(.95); border-radius: 4px; transition: transform .15s; pointer-events: none; }
+  body.arranging .tile .overlay { display: none; }
+  .tile.placeholder { opacity: .25; }
+  .tile.ghost { position: fixed; z-index: 70; pointer-events: none; margin: 0; box-shadow: 0 12px 32px rgba(0,0,0,.35); cursor: grabbing; }
+  .tile.ghost img { transform: none; }
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 20px); background: #262626; color: #fff; padding: 12px 20px; border-radius: 8px; opacity: 0; transition: .25s; pointer-events: none; z-index: 60; }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
@@ -175,6 +192,8 @@
     .card { flex-direction: column; max-height: 100dvh; height: 100dvh; border-radius: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: env(safe-area-inset-bottom); }
     .modal .close { top: calc(12px + env(safe-area-inset-top)); z-index: 2; background: rgba(0,0,0,.45); border-radius: 50%; padding: 4px; }
     .toast { bottom: calc(68px + env(safe-area-inset-bottom)); }
+    .arrange { bottom: calc(64px + env(safe-area-inset-bottom)); left: 12px; right: 12px; }
+    .arrange-tools span { display: none; }
     .side .add { position: sticky; bottom: 0; background: var(--surface); }
     .card .photo img { aspect-ratio: 3 / 4; height: auto; }
     .card .side { flex: none; border-left: 0; }
@@ -303,6 +322,16 @@
   </div>
 </div>
 
+<div class="arrange" id="arrange">
+  <button class="arrange-start" id="arrangeStart"><svg><use href="#i-grid"/></svg>Arrange</button>
+  <div class="arrange-tools">
+    <span>Drag posts to reorder</span>
+    <button id="arrangeReset">Reset</button>
+    <button id="arrangeCopy">Copy order</button>
+    <button id="arrangeDone" class="done">Done</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -394,6 +423,20 @@
   const hlHTML = highlights.map(([t, src]) => `<button class="hl" data-toast="Opens “${esc(t)}” highlight"><div class="circle"><img src="${src}" alt=""></div><span>${esc(t)}</span></button>`);
   $("highlights").innerHTML = hlHTML.join("");
 
+  // Grid order: the viewer's own arrangement is kept in this browser (localStorage)
+  const ORDER_KEY = "daruma-feed-order";
+  function savedOrder() {
+    try { return JSON.parse(localStorage.getItem(ORDER_KEY)) || []; } catch { return []; }
+  }
+  function ordered() {
+    const byN = new Map(posts.map(p => [p.n, p]));
+    const list = savedOrder().filter(n => byN.has(n)).map(n => byN.get(n));
+    return list.concat(posts.filter(p => !list.includes(p)));   // new posts go at the end
+  }
+  function saveOrder(ns) {
+    try { localStorage.setItem(ORDER_KEY, JSON.stringify(ns)); } catch {}
+  }
+
   // Grid
   let current = posts;
   const emptyMsg = {
@@ -403,7 +446,7 @@
   function renderGrid(list, tab) {
     current = list;
     $("grid").innerHTML = list.length ? list.map((p, i) => `
-      <div class="tile" data-i="${i}">
+      <div class="tile" data-i="${i}" data-n="${p.n}">
         <img alt="">
         ${(p.pinned && tab === "posts") || p.reel ? `<span class="type">${p.pinned && tab === "posts" ? icon("pin") : ""}${p.reel ? icon("reels") : ""}</span>` : ""}
         <div class="overlay"><span>${icon("solid-heart")}</span><span>${icon("solid-comment")}</span></div>
@@ -411,7 +454,7 @@
       : `<div class="empty">${emptyMsg[tab]}</div>`;
     $("grid").querySelectorAll(".tile img").forEach((img, i) => setSrc(img, srcs(list[i]), list[i]));
   }
-  renderGrid(posts, "posts");
+  renderGrid(ordered(), "posts");
 
   // Post modal
   let open = null;
@@ -458,16 +501,106 @@
   document.addEventListener("click", e => {
     const el = e.target.closest("button, .tile, [data-toast]");
     if (!el) return;
-    if (el.classList.contains("tile")) return openPost(current[el.dataset.i]);
+    if (el.classList.contains("tile")) return arranging ? undefined : openPost(current[el.dataset.i]);
     if (el.classList.contains("follow-btn") || el.classList.contains("follow-btn-small")) return setFollow(!following);
     if (el.classList.contains("tab")) {
       document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t === el));
       const k = el.dataset.tab;
-      return renderGrid({ posts, reels: posts.filter(p => p.reel), tagged: [] }[k], k);
+      return renderGrid({ posts: ordered(), reels: posts.filter(p => p.reel), tagged: [] }[k], k);
     }
     if (el.id === "picRing") el.classList.add("seen");
     if (el.dataset.toast) toast(el.dataset.toast);
   });
+
+  // Arrange mode: drag tiles to reorder (mouse: press and drag; touch: long-press, then drag)
+  let arranging = false;
+  const grid = $("grid");
+  function setArranging(on) {
+    arranging = on;
+    document.body.classList.toggle("arranging", on);
+    if (on) {
+      document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === "posts"));
+      renderGrid(ordered(), "posts");
+      toast(matchMedia("(pointer: coarse)").matches ? "Press and hold a post, then drag" : "Drag posts to reorder");
+    }
+  }
+  $("arrangeStart").onclick = () => setArranging(true);
+  $("arrangeDone").onclick = () => setArranging(false);
+  $("arrangeReset").onclick = () => {
+    try { localStorage.removeItem(ORDER_KEY); } catch {}
+    renderGrid(ordered(), "posts"); toast("Back to the original order");
+  };
+  $("arrangeCopy").onclick = async () => {
+    const text = "Daruma feed order:\n" + ordered().map((p, i) => `${i + 1}. ${p.label} (post ${pad(p.n)})`).join("\n");
+    try { await navigator.clipboard.writeText(text); toast("Order copied"); }
+    catch { window.prompt("Copy the order:", text.replace(/\n/g, " · ")); }
+  };
+
+  let dragEl = null, ghost = null, dragging = false, pressTimer = null, start = null, offset = null;
+  const point = e => e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
+
+  function pressStart(e, isTouch) {
+    if (!arranging) return;
+    const tile = e.target.closest(".tile");
+    if (!tile || !grid.contains(tile)) return;
+    dragEl = tile; start = point(e);
+    if (isTouch) pressTimer = setTimeout(() => beginDrag(start), 220);
+    else e.preventDefault();
+  }
+  function beginDrag(pt) {
+    if (!dragEl) return;
+    dragging = true;
+    const r = dragEl.getBoundingClientRect();
+    offset = { x: pt.x - r.left, y: pt.y - r.top };
+    ghost = dragEl.cloneNode(true);
+    ghost.classList.add("ghost");
+    Object.assign(ghost.style, { width: r.width + "px", height: r.height + "px", left: "0px", top: "0px" });
+    document.body.appendChild(ghost);
+    dragEl.classList.add("placeholder");
+    moveGhost(pt);
+    navigator.vibrate?.(12);
+  }
+  function moveGhost(pt) {
+    ghost.style.transform = `translate(${pt.x - offset.x}px, ${pt.y - offset.y}px) scale(1.04)`;
+  }
+  function pressMove(e, isTouch) {
+    if (!dragEl) return;
+    const pt = point(e);
+    if (!dragging) {
+      const d = Math.hypot(pt.x - start.x, pt.y - start.y);
+      if (isTouch) { if (d > 10) { clearTimeout(pressTimer); dragEl = null; } return; }   // it's a scroll
+      if (d < 5) return;
+      beginDrag(pt);
+    }
+    e.preventDefault();
+    moveGhost(pt);
+    const under = document.elementFromPoint(pt.x, pt.y)?.closest(".tile");
+    if (under && under !== dragEl && grid.contains(under)) {
+      const tiles = [...grid.children];
+      grid.insertBefore(dragEl, tiles.indexOf(dragEl) < tiles.indexOf(under) ? under.nextSibling : under);
+    }
+    if (pt.y < 70) window.scrollBy(0, -14);
+    else if (pt.y > innerHeight - 90) window.scrollBy(0, 14);
+  }
+  function pressEnd() {
+    clearTimeout(pressTimer);
+    if (dragging) {
+      ghost.remove(); ghost = null;
+      dragEl.classList.remove("placeholder");
+      saveOrder([...grid.querySelectorAll(".tile")].map(t => +t.dataset.n));
+      renderGrid(ordered(), "posts");
+      toast("Order saved in this browser");
+    }
+    dragEl = null; dragging = false;
+  }
+  grid.addEventListener("mousedown", e => pressStart(e, false));
+  window.addEventListener("mousemove", e => pressMove(e, false));
+  window.addEventListener("mouseup", pressEnd);
+  grid.addEventListener("touchstart", e => pressStart(e, true), { passive: true });
+  window.addEventListener("touchmove", e => pressMove(e, true), { passive: false });
+  window.addEventListener("touchend", pressEnd);
+  window.addEventListener("touchcancel", pressEnd);
+  grid.addEventListener("contextmenu", e => { if (arranging) e.preventDefault(); });
 
   // Toast
   let tt;
