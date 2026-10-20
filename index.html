@@ -332,18 +332,14 @@
   // Put your images in my-posts/ named 01.jpg … 12.jpg (or .png / .webp).
   // Any number that's missing falls back to the original photo in images/.
   const posts = [
-    { n: 1,  date: "October 1, 2026", label: "Panorama · left",  pinned: true, pano: 0, caption: "Pick your designs. Dragons, tigers, torii gates, flowers — stitched onto your own jeans." },
-    { n: 2,  date: "October 1, 2026", label: "Panorama · middle",  pinned: true, pano: 1, caption: "Make them with your own hands in our Harajuku workshop. No experience needed — book via link in bio." },
-    { n: 3,  date: "October 1, 2026", label: "Panorama · right",  pinned: true, pano: 2, caption: "Walk out wearing jeans nobody else has. Made in Japan. Crafted by You." },
-    { n: 4,  date: "October 18, 2026", label: "Selvedge detail", caption: "From our Harajuku workshop to brunch in SoHo. “I ♥ Tokyo” and a golden tiger, designed and stitched by Tammy herself. 📸 @ctammy_" },
-    { n: 5,  date: "October 17, 2026", reel: true, caption: "Daruma Jeans. Made in Japan. Crafted by You. Design your own pair in Harajuku — booking link in bio." },
-    { n: 6,  date: "October 16, 2026", label: "Ready to customize", caption: "Every pair starts here: raw Japanese selvedge, waiting for your story. Pick your fit and we'll take it from there." },
-    { n: 7,  date: "October 15, 2026", label: "Finished details", caption: "Cherry blossoms, a crescent moon and “I ♥ Tokyo”. Every pocket tells a different story." },
-    { n: 8,  date: "October 13, 2026", label: "Embroidery machine", caption: "Your design, stitched in minutes. Watch the needles bring your Daruma to life right in front of you." },
-    { n: 9,  date: "October 11, 2026", label: "Customer on the street", caption: "A red dragon for him; cherry blossoms, koi and “I ♥ Tokyo” for her. Two pairs, two stories, both designed in our Harajuku workshop." },
-    { n: 10, date: "October 9, 2026", label: "Embroidery up close", caption: "Up close: a red dragon and a torii gate on his; cherry blossoms, a crescent moon, koi and “I ♥ Tokyo” on hers. Which would you choose?" },
-    { n: 11, date: "October 7, 2026", label: "Pick your buttons", caption: "Choose your buttons and rivets, then set them yourself with our hand press. Small details, all yours." },
-    { n: 12, date: "October 5, 2026", label: "Leather patch", caption: "The finishing touch: our Daruma leather patch, sewn onto every pair. Made in Japan. Crafted by You." },
+    { n: 1, date: "October 18, 2026", label: "Your design, your pair", caption: "Cherry blossoms, a crescent moon and koi — every detail chosen by you, stitched in our Harajuku workshop." },
+    { n: 2, date: "October 16, 2026", label: "Crane on the hem", caption: "A white crane, right above the cuff. Pick any design and put it anywhere you like." },
+    { n: 3, date: "October 14, 2026", label: "Daruma Jeans", caption: "Daruma Jeans. Made in Japan. Crafted by You." },
+    { n: 4, date: "October 12, 2026", label: "Golden tiger", caption: "Golden tiger, ready for ramen. Your jeans, your story." },
+    { n: 5, date: "October 10, 2026", label: "Under the Tokyo sky", caption: "Cherry blossoms under the Tokyo sky. Designed by you, made in Harajuku." },
+    { n: 6, date: "October 8, 2026", label: "Kick back", caption: "Kick back in jeans nobody else has." },
+    { n: 7, date: "October 6, 2026", label: "Stitched live", caption: "Watch your crane come to life — every embroidery is stitched right in front of you." },
+    { n: 8, date: "October 4, 2026", label: "Choose your designs", caption: "Every pair starts with a choice. Book your workshop via the link in bio." },
   ];
   const pad = n => String(n).padStart(2, "0");
   // Candidate image paths for a post, tried in order
