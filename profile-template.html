@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instagram Profile Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Grand+Hotel&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff; --surface: #ffffff; --text: #000000; --muted: #737373;
+    --border: #dbdbdb; --hover: #f2f2f2; --btn: #efefef; --btn-hover: #dbdbdb;
+    --blue: #0095f6; --red: #ff3040; --link: #00376b;
+    --ring: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #000; --surface: #000; --text: #f5f5f5; --muted: #a8a8a8;
+      --border: #262626; --hover: #1a1a1a; --btn: #363636; --btn-hover: #262626; --link: #e0f1ff;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #000; --surface: #000; --text: #f5f5f5; --muted: #a8a8a8;
+    --border: #262626; --hover: #1a1a1a; --btn: #363636; --btn-hover: #262626; --link: #e0f1ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font: 14px/1.4 Inter, -apple-system, system-ui, sans-serif; }
+  button { background: none; border: 0; color: inherit; font: inherit; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+  svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .avatar { border-radius: 50%; object-fit: cover; display: block; background: var(--hover); }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: fixed; inset: 0 auto 0 0; width: 245px; padding: 24px 12px 20px;
+    border-right: 1px solid var(--border); display: flex; flex-direction: column; background: var(--surface); z-index: 10;
+  }
+  .logo { font-family: "Grand Hotel", cursive; font-size: 30px; padding: 6px 12px 28px; }
+  .nav-item { display: flex; align-items: center; gap: 16px; padding: 12px; border-radius: 8px; font-size: 16px; width: 100%; text-align: left; }
+  .nav-item:hover { background: var(--hover); }
+  .nav-item.active { font-weight: 700; }
+  .nav-item.active .avatar { outline: 2px solid var(--text); outline-offset: 1px; }
+  .nav-item .badge { margin-left: auto; background: var(--red); color: #fff; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 10px; }
+  .nav-spacer { flex: 1; }
+
+  /* ---------- Profile ---------- */
+  main { margin-left: 245px; padding: 30px 20px 0; }
+  .profile { max-width: 935px; margin: 0 auto; }
+  .header { display: flex; align-items: flex-start; gap: 30px; margin-bottom: 44px; }
+  .pic { flex: 0 0 290px; display: flex; justify-content: center; }
+  .pic .ring { padding: 3px; border-radius: 50%; background: var(--ring); }
+  .pic .avatar { width: 150px; height: 150px; border: 4px solid var(--bg); }
+  .info { flex: 1; min-width: 0; }
+  .row1 { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .username { font-size: 20px; font-weight: 400; margin-right: 12px; display: flex; align-items: center; gap: 6px; }
+  .verified { width: 18px; height: 18px; }
+  .btn { background: var(--btn); padding: 7px 16px; border-radius: 8px; font-weight: 600; }
+  .btn:hover { background: var(--btn-hover); }
+  .btn.primary { background: var(--blue); color: #fff; }
+  .btn.primary:hover { background: #1877f2; }
+  .btn.icon { padding: 7px 8px; }
+  .btn.icon svg { width: 18px; height: 18px; }
+  .btn.feature { background: var(--ring); color: #fff; display: flex; align-items: center; gap: 6px; }
+  .btn.feature svg { width: 16px; height: 16px; }
+  .stats { display: flex; gap: 40px; font-size: 16px; margin-bottom: 20px; list-style: none; }
+  .stats b { font-weight: 600; }
+  .bio .name { font-weight: 600; }
+  .bio .cat { color: var(--muted); }
+  .bio a { color: var(--link); font-weight: 600; }
+
+  /* ---------- Highlights ---------- */
+  .highlights { display: flex; gap: 40px; padding: 0 44px 44px; overflow-x: auto; scrollbar-width: none; }
+  .highlights::-webkit-scrollbar { display: none; }
+  .hl { display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; font-size: 12px; font-weight: 600; }
+  .hl .circle { width: 87px; height: 87px; border-radius: 50%; padding: 3px; border: 1px solid var(--border); }
+  .hl .circle img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+  .hl.new .circle { display: grid; place-items: center; }
+  .hl.new svg { width: 44px; height: 44px; stroke-width: 1; color: var(--muted); }
+  .hl.feature .circle { border: 2px dashed #d62976; display: grid; place-items: center; background: linear-gradient(135deg, rgba(254,218,117,.15), rgba(214,41,118,.15), rgba(79,91,213,.15)); }
+  .hl.feature svg { width: 36px; height: 36px; color: #d62976; }
+
+  /* ---------- Tabs + grid ---------- */
+  .tabs { display: flex; justify-content: center; gap: 60px; border-top: 1px solid var(--border); }
+  .tab { display: flex; align-items: center; gap: 6px; height: 52px; font-size: 12px; font-weight: 600; letter-spacing: 1px; color: var(--muted); border-top: 1px solid transparent; margin-top: -1px; }
+  .tab svg { width: 12px; height: 12px; }
+  .tab.active { color: var(--text); border-top-color: var(--text); }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding-bottom: 40px; }
+  .tile { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--hover); cursor: pointer; }
+  .tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile .type { position: absolute; top: 8px; right: 8px; color: #fff; filter: drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
+  .tile .type svg { width: 20px; height: 20px; }
+  .tile .overlay { position: absolute; inset: 0; background: rgba(0,0,0,.35); color: #fff; display: flex; align-items: center; justify-content: center; gap: 28px; font-weight: 700; font-size: 16px; opacity: 0; transition: opacity .15s; }
+  .tile .overlay span { display: flex; align-items: center; gap: 6px; }
+  .tile .overlay svg { width: 20px; height: 20px; fill: #fff; stroke: none; }
+  .tile:hover .overlay { opacity: 1; }
+  .empty { grid-column: 1 / -1; text-align: center; padding: 60px 16px; color: var(--muted); }
+  .empty h3 { color: var(--text); font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+
+  /* ---------- Post modal ---------- */
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.65); display: none; align-items: center; justify-content: center; padding: 40px; z-index: 50; }
+  .modal.open { display: flex; }
+  .modal .close { position: fixed; top: 16px; right: 16px; color: #fff; }
+  .modal .close svg { width: 28px; height: 28px; }
+  .card { display: flex; background: var(--surface); border-radius: 4px; overflow: hidden; max-width: 1000px; width: 100%; max-height: calc(100vh - 80px); }
+  .card .photo { flex: 1 1 60%; background: #000; min-width: 0; }
+  .card .photo img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 3 / 4; }
+  .card .side { flex: 0 0 400px; display: flex; flex-direction: column; border-left: 1px solid var(--border); }
+  .side .head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 600; }
+  .side .body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+  .side .c { display: flex; gap: 12px; }
+  .side .c b { font-weight: 600; margin-right: 4px; }
+  .side .c small { display: block; color: var(--muted); font-size: 12px; margin-top: 6px; }
+  .side .actions { display: flex; gap: 14px; padding: 10px 16px 6px; border-top: 1px solid var(--border); }
+  .side .actions .sv { margin-left: auto; }
+  .side .liked svg { fill: var(--red); stroke: var(--red); }
+  .side .likes { padding: 0 16px 12px; font-weight: 600; }
+
+  /* ---------- Toast ---------- */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 20px); background: #262626; color: #fff; padding: 12px 20px; border-radius: 8px; opacity: 0; transition: .25s; pointer-events: none; z-index: 60; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* ---------- Responsive ---------- */
+  .topbar, .bottombar, .stats-m { display: none; }
+  @media (max-width: 1000px) {
+    .sidebar { width: 73px; } .sidebar .label, .sidebar .badge { display: none; }
+    .logo { font-size: 0; } .logo::before { content: "📷"; font-size: 24px; }
+    main { margin-left: 73px; }
+    .pic { flex-basis: 200px; }
+    .card .side { flex-basis: 320px; }
+  }
+  @media (max-width: 767px) {
+    .sidebar { display: none; }
+    main { margin: 0; padding: 52px 0 52px; }
+    .topbar { display: flex; position: fixed; top: 0; left: 0; right: 0; height: 52px; align-items: center; justify-content: space-between; padding: 0 16px; background: var(--surface); border-bottom: 1px solid var(--border); z-index: 10; font-weight: 700; font-size: 16px; }
+    .bottombar { display: flex; position: fixed; bottom: 0; left: 0; right: 0; height: 52px; justify-content: space-around; align-items: center; background: var(--surface); border-top: 1px solid var(--border); z-index: 10; }
+    .header { gap: 24px; padding: 16px; margin-bottom: 0; flex-wrap: wrap; }
+    .pic { flex: 0 0 auto; }
+    .pic .avatar { width: 77px; height: 77px; border-width: 3px; }
+    .info { flex: 1; }
+    .username { font-size: 18px; width: 100%; margin: 0; }
+    .row1 { margin-bottom: 0; }
+    .info .stats, .info .bio { display: none; }
+    .bio-m { padding: 0 16px 16px; }
+    .highlights { gap: 16px; padding: 0 16px 20px; }
+    .hl .circle { width: 64px; height: 64px; }
+    .hl.new svg { width: 30px; height: 30px; }
+    .stats-m { display: flex; justify-content: space-around; text-align: center; border-top: 1px solid var(--border); padding: 12px 0; list-style: none; color: var(--muted); }
+    .stats-m b { display: block; color: var(--text); font-weight: 600; }
+    .tabs { gap: 0; justify-content: space-around; }
+    .tab span { display: none; }
+    .tab svg { width: 24px; height: 24px; }
+    .grid { gap: 2px; }
+    .modal { padding: 0; }
+    .card { flex-direction: column; max-height: 100vh; height: 100vh; border-radius: 0; overflow-y: auto; }
+    .card .photo img { aspect-ratio: 1 / 1; height: auto; }
+    .card .side { flex: none; border-left: 0; }
+  }
+  @media (min-width: 768px) { .bio-m { display: none; } }
+</style>
+</head>
+<body>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-explore" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5z"/></symbol>
+  <symbol id="i-reels" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M3 8h18M8 3l3 5M14 3l3 5M10 12v5l4.5-2.5z"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M22 3 11 13M22 3l-7 18-4-8-8-4z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5s-8.5-5-8.5-11A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8.5 2.5c0 6-8.5 11-8.5 11z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/></symbol>
+  <symbol id="i-plus-thin" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-comment" viewBox="0 0 24 24"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.6-4.6A8.5 8.5 0 1 1 20.5 11.5z"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21 12 16l-7 5V3h14z"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M6.5 21a6 6 0 0 1 11 0"/></symbol>
+  <symbol id="i-stack" viewBox="0 0 24 24"><rect x="7" y="7" width="14" height="14" rx="2" fill="currentColor"/><path d="M4 17V5a2 2 0 0 1 2-2h12"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z" fill="currentColor"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#0095f6" stroke="none"/><path d="m7.5 12.5 3 3 6-6.5" stroke="#fff"/></symbol>
+  <symbol id="i-solid-heart" viewBox="0 0 24 24"><path d="M12 20.5s-8.5-5-8.5-11A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8.5 2.5c0 6-8.5 11-8.5 11z"/></symbol>
+  <symbol id="i-solid-comment" viewBox="0 0 24 24"><path d="M20.5 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.6-4.6A8.5 8.5 0 1 1 20.5 11.5z"/></symbol>
+</svg>
+
+<!-- Desktop sidebar -->
+<nav class="sidebar">
+  <div class="logo">Instagram</div>
+  <button class="nav-item"><svg><use href="#i-home"/></svg><span class="label">Home</span></button>
+  <button class="nav-item"><svg><use href="#i-search"/></svg><span class="label">Search</span></button>
+  <button class="nav-item"><svg><use href="#i-explore"/></svg><span class="label">Explore</span></button>
+  <button class="nav-item"><svg><use href="#i-reels"/></svg><span class="label">Reels</span></button>
+  <button class="nav-item"><svg><use href="#i-msg"/></svg><span class="label">Messages</span><span class="badge">3</span></button>
+  <button class="nav-item"><svg><use href="#i-heart"/></svg><span class="label">Notifications</span></button>
+  <button class="nav-item"><svg><use href="#i-plus"/></svg><span class="label">Create</span></button>
+  <button class="nav-item active"><img class="avatar" src="https://i.pravatar.cc/48?img=12" width="24" height="24" alt=""><span class="label">Profile</span></button>
+  <div class="nav-spacer"></div>
+  <button class="nav-item"><svg><use href="#i-menu"/></svg><span class="label">More</span></button>
+</nav>
+
+<!-- Mobile top bar -->
+<header class="topbar">
+  <button><svg><use href="#i-plus"/></svg></button>
+  <span id="topName"></span>
+  <button><svg><use href="#i-menu"/></svg></button>
+</header>
+
+<main>
+  <div class="profile">
+    <section class="header">
+      <div class="pic"><div class="ring"><img class="avatar" id="pic" alt=""></div></div>
+      <div class="info">
+        <div class="row1">
+          <h2 class="username"><span id="username"></span><svg class="verified"><use href="#i-check"/></svg></h2>
+          <button class="btn">Edit profile</button>
+          <button class="btn">View archive</button>
+          <!-- ===== YOUR IDEA: rename / restyle this button ===== -->
+          <button class="btn feature" data-toast="✨ Your new feature opens here"><svg><use href="#i-spark"/></svg>Your Feature</button>
+          <button class="btn icon"><svg><use href="#i-gear"/></svg></button>
+        </div>
+        <ul class="stats" id="stats"></ul>
+        <div class="bio" id="bio"></div>
+      </div>
+    </section>
+
+    <div class="bio bio-m" id="bioM"></div>
+
+    <section class="highlights" id="highlights"></section>
+
+    <ul class="stats-m" id="statsM"></ul>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="posts"><svg><use href="#i-grid"/></svg><span>POSTS</span></button>
+      <button class="tab" data-tab="reels"><svg><use href="#i-reels"/></svg><span>REELS</span></button>
+      <button class="tab" data-tab="saved"><svg><use href="#i-save"/></svg><span>SAVED</span></button>
+      <button class="tab" data-tab="tagged"><svg><use href="#i-tag"/></svg><span>TAGGED</span></button>
+    </nav>
+
+    <section class="grid" id="grid"></section>
+  </div>
+</main>
+
+<!-- Mobile bottom bar -->
+<nav class="bottombar">
+  <button><svg><use href="#i-home"/></svg></button>
+  <button><svg><use href="#i-search"/></svg></button>
+  <button><svg><use href="#i-plus"/></svg></button>
+  <button><svg><use href="#i-reels"/></svg></button>
+  <button><img class="avatar" src="https://i.pravatar.cc/48?img=12" width="24" height="24" alt="" style="outline:2px solid var(--text);outline-offset:1px"></button>
+</nav>
+
+<div class="modal" id="modal">
+  <button class="close" id="closeModal"><svg><use href="#i-x"/></svg></button>
+  <div class="card">
+    <div class="photo"><img id="mImg" alt=""></div>
+    <div class="side">
+      <div class="head"><img class="avatar" id="mAvatar" width="32" height="32" alt=""><span id="mName"></span><button style="margin-left:auto"><svg><use href="#i-more"/></svg></button></div>
+      <div class="body" id="mBody"></div>
+      <div class="actions">
+        <button id="mLike"><svg><use href="#i-heart"/></svg></button>
+        <button><svg><use href="#i-comment"/></svg></button>
+        <button><svg><use href="#i-msg"/></svg></button>
+        <button class="sv"><svg><use href="#i-save"/></svg></button>
+      </div>
+      <div class="likes"><span id="mLikes"></span> likes</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ================= Edit this to customise the profile =================
+  const profile = {
+    username: "your.username",
+    name: "Your Name",
+    category: "Digital creator",
+    bio: "Short bio line about you ✨\nSecond line — what you post about 📸",
+    link: "yourwebsite.com",
+    avatar: "https://i.pravatar.cc/300?img=12",
+    posts: 128, followers: 12400, following: 384
+  };
+  const highlights = [
+    { title: "Travel", seed: "hl-travel" }, { title: "Food", seed: "hl-food" },
+    { title: "Studio", seed: "hl-studio" }, { title: "Friends", seed: "hl-friends" }
+  ];
+  // Photo IDs come from picsum.photos — swap for your own image URLs if you like.
+  // type: "stack" = carousel, "reel" = video
+  const posts = [
+    { id: 1015, likes: 1284, comments: 42, type: "stack", caption: "Woke up to this view 🏔️" },
+    { id: 1080, likes: 842,  comments: 18, caption: "Market haul → dinner 🍓" },
+    { id: 1043, likes: 3901, comments: 120, type: "reel", caption: "Golden hour in the city." },
+    { id: 1018, likes: 517,  comments: 9, caption: "12km, 3 lakes, 0 regrets." },
+    { id: 1025, likes: 2210, comments: 77, caption: "Meet the office manager 🐶" },
+    { id: 1035, likes: 690,  comments: 12, type: "stack", caption: "Waterfall chasing" },
+    { id: 1039, likes: 1530, comments: 31, caption: "Quiet mornings." },
+    { id: 1050, likes: 404,  comments: 6, type: "reel", caption: "Sea breeze 🌊" },
+    { id: 1062, likes: 980,  comments: 25, caption: "Little details." },
+  ];
+  const reels  = posts.filter(p => p.type === "reel");
+  const saved  = [{ id: 1069, likes: 3120, comments: 54, caption: "Saved inspo" }, { id: 1074, likes: 870, comments: 11, caption: "Saved inspo" }];
+  const tagged = [];
+  const commenters = [["nina.photos", 45, "Unreal 😍"], ["studio.kai", 32, "This is so good"], ["chef_daniel", 13, "Need this in my life"]];
+  // =======================================================================
+
+  const $ = id => document.getElementById(id);
+  const compact = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M" : n >= 1e4 ? (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K" : n.toLocaleString("en-US");
+  const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // Header
+  $("pic").src = profile.avatar;
+  $("username").textContent = $("topName").textContent = profile.username;
+  const statsHTML = `<li><b>${compact(profile.posts)}</b> posts</li><li><b>${compact(profile.followers)}</b> followers</li><li><b>${compact(profile.following)}</b> following</li>`;
+  $("stats").innerHTML = $("statsM").innerHTML = statsHTML;
+  const bioHTML = `<div class="name">${esc(profile.name)}</div><div class="cat">${esc(profile.category)}</div><div>${esc(profile.bio).replace(/\n/g, "<br>")}</div><a href="#">🔗 ${esc(profile.link)}</a>`;
+  $("bio").innerHTML = $("bioM").innerHTML = bioHTML;
+
+  // Highlights (+ an idea slot)
+  $("highlights").innerHTML =
+    highlights.map(h => `<button class="hl" data-toast="Opens “${h.title}” highlight"><div class="circle"><img src="https://picsum.photos/seed/${h.seed}/200/200" alt=""></div>${h.title}</button>`).join("") +
+    `<button class="hl feature" data-toast="✨ Your feature as a highlight"><div class="circle"><svg><use href="#i-spark"/></svg></div>Your Idea</button>` +
+    `<button class="hl new"><div class="circle"><svg><use href="#i-plus-thin"/></svg></div>New</button>`;
+
+  // Grid
+  let current = posts;
+  const emptyMsg = {
+    saved: ["Save", "Save photos and videos that you want to see again."],
+    tagged: ["Photos of you", "When people tag you in photos, they'll appear here."],
+    reels: ["Share a moment", "Your reels will appear here."]
+  };
+  function renderGrid(list, tab) {
+    current = list;
+    $("grid").innerHTML = list.length ? list.map((p, i) => `
+      <div class="tile" data-i="${i}">
+        <img src="https://picsum.photos/id/${p.id}/600/800" alt="" loading="lazy">
+        ${p.type ? `<span class="type"><svg><use href="#i-${p.type === "reel" ? "play" : "stack"}"/></svg></span>` : ""}
+        <div class="overlay"><span><svg><use href="#i-solid-heart"/></svg>${compact(p.likes)}</span><span><svg><use href="#i-solid-comment"/></svg>${p.comments}</span></div>
+      </div>`).join("")
+      : `<div class="empty"><h3>${emptyMsg[tab][0]}</h3><p>${emptyMsg[tab][1]}</p></div>`;
+  }
+  renderGrid(posts, "posts");
+
+  // Post modal
+  let open = null;
+  function openPost(p) {
+    open = p;
+    $("mImg").src = `https://picsum.photos/id/${p.id}/900/1200`;
+    $("mAvatar").src = profile.avatar;
+    $("mName").textContent = profile.username;
+    $("mLikes").textContent = p.likes.toLocaleString("en-US");
+    $("mLike").classList.toggle("liked", !!p.liked);
+    const row = (name, img, text, time) => `<div class="c"><img class="avatar" src="https://i.pravatar.cc/64?img=${img}" width="32" height="32" alt=""><div><b>${name}</b>${esc(text)}<small>${time}</small></div></div>`;
+    $("mBody").innerHTML = row(profile.username, 12, p.caption, "2d") + commenters.slice(0, 1 + (p.id % 3)).map(([n, img, t], k) => row(n, img, t, `${k + 1}d`)).join("");
+    $("modal").classList.add("open");
+  }
+  const closeModal = () => $("modal").classList.remove("open");
+  $("closeModal").onclick = closeModal;
+  $("modal").addEventListener("click", e => { if (e.target.id === "modal") closeModal(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+  $("mLike").onclick = () => {
+    open.liked = !open.liked; open.likes += open.liked ? 1 : -1;
+    $("mLike").classList.toggle("liked", open.liked);
+    $("mLikes").textContent = open.likes.toLocaleString("en-US");
+  };
+
+  // Clicks
+  document.addEventListener("click", e => {
+    const tile = e.target.closest(".tile");
+    if (tile) return openPost(current[tile.dataset.i]);
+    const tab = e.target.closest(".tab");
+    if (tab) {
+      document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t === tab));
+      const k = tab.dataset.tab;
+      return renderGrid({ posts, reels, saved, tagged }[k], k);
+    }
+    const t = e.target.closest("[data-toast]");
+    if (t) toast(t.dataset.toast);
+  });
+
+  // Toast
+  let tt;
+  function toast(msg) { const el = $("toast"); el.textContent = msg; el.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => el.classList.remove("show"), 2000); }
+</script>
+</body>
+</html>
