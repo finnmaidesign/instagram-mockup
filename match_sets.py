@@ -14,12 +14,12 @@ from PIL import Image
 HERE = pathlib.Path(__file__).parent
 SRC, DST = HERE / "my-posts" / "ungraded", HERE / "my-posts"
 
-SETS = [["01", "02", "03"], ["04", "05", "06"], ["07", "08", "09"], ["10", "11", "12"], ["13", "14", "15"], ["16"]]
+SETS = [["01", "02", "03"], ["04", "05", "06"], ["07", "08", "09"]]
 STRENGTH_L = 0.45      # how far brightness/contrast move toward the set's look (0–1)
 STRENGTH_AB = 0.70     # how far colour moves toward the set's look (0–1)
 # Photos that are mostly a bright background. Full matching would grey them out, so instead their
 # light areas are balanced to the clean whites of the other photos in the same set.
-LIGHT_MATCH = {"08"}
+LIGHT_MATCH = set()
 
 
 # --- sRGB <-> CIELAB ---------------------------------------------------------

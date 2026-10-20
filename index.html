@@ -332,22 +332,15 @@
   // Put your images in my-posts/ named 01.jpg … 12.jpg (or .png / .webp).
   // Any number that's missing falls back to the original photo in images/.
   const posts = [
-    { n: 1, date: "October 18, 2026", label: "Your design, your pair", caption: "Cherry blossoms, a crescent moon and koi — every detail chosen by you, stitched in our Harajuku workshop." },
-    { n: 2, date: "October 16, 2026", label: "I ♥ Tokyo", caption: "A red Daruma patch and “I ♥ Tokyo” on the back pocket. Small details, all chosen by you." },
-    { n: 3, date: "October 14, 2026", label: "Daruma Jeans", caption: "Daruma Jeans. Made in Japan. Crafted by You." },
-    { n: 4, date: "October 12, 2026", label: "Golden tiger", caption: "Golden tiger, ready for ramen. Your jeans, your story." },
-    { n: 5, date: "October 10, 2026", label: "Under the Tokyo sky", caption: "Cherry blossoms under the Tokyo sky. Designed by you, made in Harajuku." },
-    { n: 6, date: "October 8, 2026", label: "Kick back", caption: "Kick back in jeans nobody else has." },
-    { n: 7, date: "October 6, 2026", label: "Stitched live", caption: "Watch your crane come to life — every embroidery is stitched right in front of you." },
-    { n: 8, date: "October 4, 2026", label: "Choose your designs", caption: "Every pair starts with a choice. Book your workshop via the link in bio." },
-    { n: 9, date: "October 2, 2026", label: "Measured for you", caption: "Measured, marked, made for you. Cherry blossoms, a crescent moon and “I ♥ Tokyo”." },
-    { n: 10, date: "September 30, 2026", label: "The start", caption: "Raw selvedge with a red Daruma — the start of something personal." },
-    { n: 11, date: "September 28, 2026", label: "Head-to-toe denim", caption: "Head-to-toe denim, with a little Mount Fuji stitched on the leg." },
-    { n: 12, date: "September 26, 2026", label: "Cuffed and pressed", caption: "Cuffed, pressed and stitched with your story." },
-    { n: 13, date: "September 24, 2026", label: "Tokyo streets", caption: "Tokyo streets, your own embroidery." },
-    { n: 14, date: "September 22, 2026", label: "Slow afternoons", caption: "Slow afternoons in jeans you designed yourself." },
-    { n: 15, date: "September 20, 2026", label: "Bring it home", caption: "From our Harajuku workshop to your home. Book via the link in bio." },
-    { n: 16, date: "September 18, 2026", label: "Folded and finished", caption: "Folded, finished, yours — with a Daruma for good luck. Made in Japan. Crafted by You." },
+    { n: 1, date: "October 18, 2026", label: "Denim on a chair", caption: "Raw selvedge with a red Daruma — the start of something personal." },
+    { n: 2, date: "October 16, 2026", label: "Head-to-toe denim", caption: "Head-to-toe denim, with Mount Fuji, a bonsai and a Daruma stitched on the leg." },
+    { n: 3, date: "October 14, 2026", label: "Your design, your pair", caption: "Cherry blossoms, a crescent moon and koi — every detail chosen by you, stitched in our Harajuku workshop." },
+    { n: 4, date: "October 12, 2026", label: "Tokyo streets", caption: "Tokyo streets, your own embroidery." },
+    { n: 5, date: "October 10, 2026", label: "Daruma Jeans", caption: "Daruma Jeans. Made in Japan. Crafted by You." },
+    { n: 6, date: "October 8, 2026", label: "Crane on the hem", caption: "A white crane, right above the cuff. Pick any design and put it anywhere you like." },
+    { n: 7, date: "October 6, 2026", label: "Golden tiger", caption: "Golden tiger, ready for ramen. Your jeans, your story." },
+    { n: 8, date: "October 4, 2026", label: "Cuffed and pressed", caption: "Cuffed, pressed and stitched with your story." },
+    { n: 9, date: "October 2, 2026", label: "Slow afternoons", caption: "Slow afternoons in jeans you designed yourself. Book via the link in bio." },
   ];
   const pad = n => String(n).padStart(2, "0");
   // Candidate image paths for a post, tried in order
